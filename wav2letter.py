@@ -8,13 +8,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Wav2Letter')
     parser.add_argument('--batch-size', type=int, default=56)
     parser.add_argument('--epochs', type=int, default=1000)
-    parser.add_argument("--npy_dir", type=str, default="/mnt/IYOCorpora/YKH/JSUT")
-    parser.add_argument("--checkpoint", type=str, default="/home/jcadic/NHDModels/YKH/JSUT/Wav2Letter/wav2letter_jsut.pth")
+    parser.add_argument("--npy_dir", type=str, default="npy")
+    parser.add_argument("--checkpoint", type=str, default="checkpoint/wav2letter.pth")
     args = parser.parse_args()
 
     # Create the model
-    model = Wav2Letter(num_classes=len("{}/index2char.npy".format(args.npy_dir)),
-                       index2char="{}/index2char.npy".format(args.npy_dir),
+    model = Wav2Letter(index2char="{}/index2char.npy".format(args.npy_dir),
                        trace_file="/tmp/Wav2Letter_{}.txt".format(os.getpid()))
 
     # Fit the model
@@ -25,4 +24,5 @@ if __name__ == "__main__":
               batch_size=args.batch_size,
               epochs=args.epochs,
               checkpoint=args.checkpoint)
+
 
