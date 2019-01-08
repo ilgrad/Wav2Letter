@@ -1,28 +1,31 @@
-# Wav2Letter Speech Recognition with Pytorch
+# Wav2Letter Speech Recognition with Pytorch in Japanese
 
-A Simple, straight forward, easy to read implementation of Wav2Letter, a speech recognition model from Facebooks AI Research (FAIR) [paper](https://arxiv.org/pdf/1609.03193.pdf). You can see most of the architecture in the `Wav2Letter` directory.
+Original code: https://github.com/LearnedVector/Wav2Letter
+Original paper: [paper]https://arxiv.org/pdf/1609.03193.pdf
 
-The next iteration of Wav2Letter can be found in this [paper](https://arxiv.org/abs/1712.09444). This paper uses Gated Convnets instead of normal Convnets.
-
-The [Google Speech Command Example.ipynb](https://github.com/LearnedVector/Wav2Letter/blob/master/Google%20Speech%20Command%20Example.ipynb) notebook contains an example of this implementation.
+Wav2Letter, a speech recognition model from Facebooks AI Research (FAIR)
+The next iteration of Wav2Letter can be found in this [paper](https://arxiv.org/abs/1712.09444). 
 
 <p align="center">
-  <img src="Wav2Letter-diagram.png" alt="Precise 2 Diagram" height="700"/>
+  <img src="imgs/Wav2Letter-diagram.png" height="700"/>
 </p>
 
 ## Differences
 
-* Uses CTC Loss
-* Uses Greedy Decoder
+* IYO.
+* Use manifest for preprocessing.
+* Cython implementation.
+* Dataset processing.
+* Eval and test gas been added.
+* Checkpoint.
+* Verbose.
+* FAIR used Gated Convnets instead of normal Convnets.
 
-## TODO
+## TODO (from https://github.com/LearnedVector/Wav2Letter) 
 
-* Implement Train, Validation, Test sets
-* Test on larger speech data
 * Implement AutoSegCriterion
 * Implement Beam Search Decoder
 * Use KenLM Langauge Model in Decoder
-* Use larger datasets
 * Add Gated ConvNets
 
 ## Getting Started
@@ -30,7 +33,7 @@ The [Google Speech Command Example.ipynb](https://github.com/LearnedVector/Wav2L
 ## Requirements
 
 ```bash
-pip install -r requirements.txt
+pip install iyo-python
 ```
 
 Make sure you are using pytorch-nightly (version 1.0 alpha). This has the CTC_Loss loss function we need.
@@ -47,32 +50,37 @@ This will train a model on randomly generated inputs and target generated data. 
 
 ## Data
 
-For an initial test, I used the [Google Speech Command Dataset](https://www.kaggle.com/c/tensorflow-speech-recognition-challenge/data). This is a simple to use lightweight dataset for testing model performance.
+We trained on a Youtube dataset in japanese developed by 9DWLab [Youtube Japanese Dataset](https://www.iyo.ai/static/dataset/yt_9dwlab.zip). 
 
 ### Instructions to download data
 
-1. Download the dataset.
-2. Create a `./speech_data` directory at root of this project.
-3. Unzip the google speech data. Should be named `speech_commands_v0.01`.
+1. Download the [Youtube Japanese Dataset](https://www.iyo.ai/static/dataset/yt_9dwlab.zip) in `./dataset`
 
 ### Prepare data
-
-`data.py` contains scripts to process google speech command audio data into features compatible with Wav2Letter.
-
+1. Create `./data/npy` for npy files
+2. Create`./data/pkl` for pkl file
+3. Create `./data/csv`for the manifest
+4. Prepare the manifest with iyo
 ```bash
-python Wav2Letter/data.py
+python utils/manifest.py --root dataset --partitions {"train":0.8, "dev":0.1, "test":0.1} --csv_dir data/csv_dir
+```
+5. Prepare the npy and pkl files
+```bash
+python utils/binaries.py --manifest_prefixe data/csv/youtube-2_10 --npy_dir data/npy --pkl_dir data/pkl_dir
 ```
 
-This will process the google speech commands audio data into 13 mfcc features with a max framelength of 250 (these are short audio clips). Anything less will be padded with zeros. Target data will be integer encoded and also padded to have the same length. Final outputs are numpy arrays saved as `x.npy` and `y.npy` in the `./speech_data` directory.
+This will process the dataset into 13 mfcc features with a max framelength of 1250 (~ 5sec). Anything less will be padded with zeros. Target data will be integer encoded and also padded to have the same length. Final outputs are numpy arrays saved as `x.npy` and `y.npy` in the `./data/npy` directory.
 
 ## Train
+
+1. Create `./checkpoint`to save the checkpoints.
 
 `train.py` has the code to run the training. Example would be.
 
 ```bash
-python train.py --batch_size=256 --epochs=1000
+python train.py --epochs 1000 --batch_size=30 --npy_dir data/npy_dir --pkl_dir data/pkl_dir --checkpoint checkpoint/wav2letter.pth
 ```
 
 ## Contributions
 
-Pull Requests are accepted! I would love some help to knock out the Todo's. Email me at learnedvector@gmail.com for any questions.
+Email me at contact@9dwlab.com for any questions.
