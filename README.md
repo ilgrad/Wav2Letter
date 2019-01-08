@@ -66,7 +66,7 @@ python utils/manifest.py --root dataset --partitions {"train":0.8, "dev":0.1, "t
 ```
 5. Prepare the npy and pkl files
 ```bash
-python utils/binaries.py --manifest_prefixe data/csv/youtube-2_10 --npy_dir data/npy --pkl_dir data/pkl_dir
+python utils/data_preparator.py --manifest_prefixe data/csv/youtube-2_10 --npy_dir data/npy --pkl_dir data/pkl_dir
 ```
 
 This will process the dataset into 13 mfcc features with a max framelength of 1250 (~ 5sec). Anything less will be padded with zeros. Target data will be integer encoded and also padded to have the same length. Final outputs are numpy arrays saved as `x.npy` and `y.npy` in the `./data/npy` directory.
