@@ -83,4 +83,4 @@ python train.py --epochs 1000 --batch_size=30 --npy_dir data/npy_dir --pkl_dir d
 
 ## Contributions
 
-Email me at contact@9dw-lab.com for any questions.
+For any question please contact me at j.cadic@protonmail.ch
